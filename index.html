@@ -19,14 +19,7 @@
       }
       .follow-img {
         position: absolute;
-        width: 100px;
-        height: 100px;
-        transform: translate(-50%, -50%);
-        pointer-events: none;
-      }
-      .follow-img-2 {
-        position: absolute;
-        width: 300px;
+        width: 500px;
         height: auto;
         transform: translate(-50%, -50%);
         pointer-events: none;
@@ -35,9 +28,15 @@
   </head>
   <body>
     <div id="container">
-      <img id="eye" class="follow-img" src="images/glase.png" alt="画像_目" />
+      <img id="back-hear" class="follow-img" src="images/usirogami.png" alt="画像_後ろ髪" />
+      <img id="face" class="follow-img" src="images/face.png" alt="画像_顔" />
+      <img id="eye" class="follow-img" src="images/eye.png" alt="画像_目" />
+      <img id="under-eye" class="follow-img" src="images/namidabukuro.png" alt="画像_涙袋" />
+      <img id="eyelid" class="follow-img" src="images/mabuta.png" alt="画像_瞼" />
+      <img id="front-hear-2" class="follow-img" src="images/osage.png" alt="画像_前髪_2" />
+      <img id="front-hear-1" class="follow-img" src="images/maegami.png" alt="画像_前髪_1" />
       <img id="mouth" class="follow-img" src="images/mouth.png" alt="画像_口" />
-      <img id="face" class="follow-img-2" src="images/men.png" alt="画像_顔" />
+      <img id="eyebrow" class="follow-img" src="images/mayu.png" alt="画像_眉" />
     </div>
 
     <script>
@@ -46,24 +45,11 @@
 
       const objects = [
         {
-          el: document.getElementById("eye"),
+          el: document.getElementById("back-hear"),
           x: centerX,
           y: centerY,
-          targetX: centerX,
-          targetY: centerY,
-          maxRadius: 30,
-          speed: 0.08,
-          offsetX: 0,
-          offsetY: -40,
-        },
-        {
-          el: document.getElementById("mouth"),
-          x: centerX,
-          y: centerY,
-          targetX: centerX,
-          targetY: centerY,
-          maxRadius: 20,
-          speed: 0.08,
+          maxRadius: 10,
+          speed: 0.02,
           offsetX: 0,
           offsetY: 0,
         },
@@ -71,12 +57,80 @@
           el: document.getElementById("face"),
           x: centerX,
           y: centerY,
-          maxRadius: 20,
+          maxRadius: 11,
+          speed: 0.03,
+          offsetX: 0,
+          offsetY: 0,
+        },
+        {
+          el: document.getElementById("front-hear-2"),
+          x: centerX,
+          y: centerY,
+          maxRadius: 12,
+          speed: 0.04,
+          offsetX: 0,
+          offsetY: 0,
+        },
+        {
+          el: document.getElementById("front-hear-1"),
+          x: centerX,
+          y: centerY,
+          maxRadius: 13,
+          speed: 0.04,
+          offsetX: 0,
+          offsetY: 0,
+        },
+        {
+          el: document.getElementById("mouth"),
+          x: centerX,
+          y: centerY,
+          targetX: centerX,
+          targetY: centerY,
+          maxRadius: 17,
+          speed: 0.22,
+          offsetX: 0,
+          offsetY: 0,
+        },
+        {
+          el: document.getElementById("eye"),
+          x: centerX,
+          y: centerY,
+          targetX: centerX,
+          targetY: centerY,
+          maxRadius: 18,
+          speed: 0.08,
+          offsetX: 0,
+          offsetY: 0,
+        },
+        {
+          el: document.getElementById("under-eye"),
+          x: centerX,
+          y: centerY,
+          maxRadius: 18,
+          speed: 0.04,
+          offsetX: 0,
+          offsetY: 0,
+        },
+        {
+          el: document.getElementById("eyelid"),
+          x: centerX,
+          y: centerY,
+          maxRadius: 13,
+          speed: 0.04,
+          offsetX: 0,
+          offsetY: 0,
+        },
+        {
+          el: document.getElementById("eyebrow"),
+          x: centerX,
+          y: centerY,
+          maxRadius: 13,
           speed: 0.04,
           offsetX: 0,
           offsetY: 0,
         },
       ];
+      
 
       function updateTargets(clientX, clientY) {
         for (const obj of objects) {
@@ -115,15 +169,51 @@
       );
 
       function animate() {
-        const eye = objects[0]; // 画像1（目）
-        const mouth = objects[1]; // 画像2（口）
-        const face = objects[2]; // 画像3（顔）
+        const backHear = objects[0]; // （後ろ髪）
+        const face = objects[1]; // （顔）
+        const frontHear2 = objects[2]; // （前髪２）
+        const frontHear1 = objects[3]; // （前髪１）
+        const mouth = objects[4]; // （口）
+        const eye = objects[5]; // （目）
+        const underEye = objects[6]; // （涙袋）
+        const eyelid = objects[7]; // （瞼）
+        const eyebrow = objects[8]; //（眉）
 
         // 目を動かす
         eye.x += (eye.targetX - eye.x) * eye.speed;
         eye.y += (eye.targetY - eye.y) * eye.speed;
         eye.el.style.left = `${eye.x}px`;
         eye.el.style.top = `${eye.y}px`;
+        // 眉を動かす
+        eyebrow.x += (eyebrow.targetX - eyebrow.x) * eyebrow.speed;
+        eyebrow.y += (eyebrow.targetY - eyebrow.y) * eyebrow.speed;
+        eyebrow.el.style.left = `${eyebrow.x}px`;
+        eyebrow.el.style.top = `${eyebrow.y}px`;
+        // 瞼を動かす
+        eyelid.x += (eyelid.targetX - eyelid.x) * eyelid.speed;
+        eyelid.y += (eyelid.targetY - eyelid.y) * eyelid.speed;
+        eyelid.el.style.left = `${eyelid.x}px`;
+        eyelid.el.style.top = `${eyelid.y}px`;
+        // 涙袋を動かす
+        underEye.x += (underEye.targetX - underEye.x) * underEye.speed;
+        underEye.y += (underEye.targetY - underEye.y) * underEye.speed;
+        underEye.el.style.left = `${underEye.x}px`;
+        underEye.el.style.top = `${underEye.y}px`;
+        // 前髪１を動かす
+        frontHear1.x += (frontHear1.targetX - frontHear1.x) * frontHear1.speed;
+        frontHear1.y += (frontHear1.targetY - frontHear1.y) * frontHear1.speed;
+        frontHear1.el.style.left = `${frontHear1.x}px`;
+        frontHear1.el.style.top = `${frontHear1.y}px`;
+        // 前髪２を動かす
+        frontHear2.x += (frontHear2.targetX - frontHear2.x) * frontHear2.speed;
+        frontHear2.y += (frontHear2.targetY - frontHear2.y) * frontHear2.speed;
+        frontHear2.el.style.left = `${frontHear2.x}px`;
+        frontHear2.el.style.top = `${frontHear2.y}px`;
+        // 後ろ髪を動かす
+        backHear.x += (backHear.targetX - backHear.x) * backHear.speed;
+        backHear.y += (backHear.targetY - backHear.y) * backHear.speed;
+        backHear.el.style.left = `${backHear.x}px`;
+        backHear.el.style.top = `${backHear.y}px`;
 
         // 目の移動に連動して顔を動かす
         const eyeOffsetX = eye.x - (centerX + eye.offsetX);
@@ -131,8 +221,8 @@
         const faceTargetX = centerX + face.offsetX + eyeOffsetX * 0.5;
         const faceTargetY = centerY + face.offsetY + eyeOffsetY * 0.5;
 
-        // Y方向の動きの抑制：上方向はそのまま、下方向は0.4倍
-        const mouthYOffset = eyeOffsetY >= 0 ? eyeOffsetY * 0.7 : eyeOffsetY;
+        // 口パーツのY方向の動きの抑制：上方向はそのまま、下方向は0.4倍
+        const mouthYOffset = eyeOffsetY >= 0 ? eyeOffsetY * 1.0 : eyeOffsetY;
         
         // 目の移動に連動して口を動かす
         const mouthTargetX = centerX + mouth.offsetX + eyeOffsetX * 1.0;
