@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Live2D風</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        height: 100%;
+        overflow: hidden;
+        background: #f0f0f0;
+      }
+      #container {
+        width: 100%;
+        height: 100%;
+        position: relative;
+      }
+      .follow-img {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+      }
+      .follow-img-2 {
+        position: absolute;
+        width: 300px;
+        height: auto;
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <img id="eye" class="follow-img" src="images/glase.png" alt="画像_目" />
+      <img id="mouth" class="follow-img" src="images/mouth.png" alt="画像_口" />
+      <img id="face" class="follow-img-2" src="images/men.png" alt="画像_顔" />
+    </div>
+
+    <script>
+      let centerX = window.innerWidth / 2;
+      let centerY = window.innerHeight / 2;
+
+      const objects = [
+        {
+          el: document.getElementById("eye"),
+          x: centerX,
+          y: centerY,
+          targetX: centerX,
+          targetY: centerY,
+          maxRadius: 30,
+          speed: 0.08,
+          offsetX: 0,
+          offsetY: -40,
+        },
+        {
+          el: document.getElementById("mouth"),
+          x: centerX,
+          y: centerY,
+          targetX: centerX,
+          targetY: centerY,
+          maxRadius: 20,
+          speed: 0.08,
+          offsetX: 0,
+          offsetY: 0,
+        },
+        {
+          el: document.getElementById("face"),
+          x: centerX,
+          y: centerY,
+          maxRadius: 20,
+          speed: 0.04,
+          offsetX: 0,
+          offsetY: 0,
+        },
+      ];
+
+      function updateTargets(clientX, clientY) {
+        for (const obj of objects) {
+          const refCenterX = centerX + obj.offsetX;
+          const refCenterY = centerY + obj.offsetY;
+          const dx = clientX - refCenterX;
+          const dy = clientY - refCenterY;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist <= obj.maxRadius) {
+            obj.targetX = clientX;
+            obj.targetY = clientY;
+          } else {
+            const ratio = obj.maxRadius / dist;
+            obj.targetX = refCenterX + dx * ratio;
+            obj.targetY = refCenterY + dy * ratio;
+          }
+        }
+      }
+
+      // PC: マウス追従
+      document.addEventListener("mousemove", (e) => {
+        updateTargets(e.clientX, e.clientY);
+      });
+
+      // スマホ: タッチ対応
+      document.addEventListener(
+        "touchmove",
+        (e) => {
+          if (e.touches.length > 0) {
+            const touch = e.touches[0];
+            updateTargets(touch.clientX, touch.clientY);
+          }
+        },
+        { passive: true }
+      );
+
+      function animate() {
+        const eye = objects[0]; // 画像1（目）
+        const mouth = objects[1]; // 画像2（口）
+        const face = objects[2]; // 画像3（顔）
+
+        // 目を動かす
+        eye.x += (eye.targetX - eye.x) * eye.speed;
+        eye.y += (eye.targetY - eye.y) * eye.speed;
+        eye.el.style.left = `${eye.x}px`;
+        eye.el.style.top = `${eye.y}px`;
+
+        // 目の移動に連動して顔を動かす
+        const eyeOffsetX = eye.x - (centerX + eye.offsetX);
+        const eyeOffsetY = eye.y - (centerY + eye.offsetY);
+        const faceTargetX = centerX + face.offsetX + eyeOffsetX * 0.5;
+        const faceTargetY = centerY + face.offsetY + eyeOffsetY * 0.5;
+
+        // Y方向の動きの抑制：上方向はそのまま、下方向は0.4倍
+        const mouthYOffset = eyeOffsetY >= 0 ? eyeOffsetY * 0.7 : eyeOffsetY;
+        
+        // 目の移動に連動して口を動かす
+        const mouthTargetX = centerX + mouth.offsetX + eyeOffsetX * 1.0;
+        const mouthTargetY = centerY + mouth.offsetY + mouthYOffset;
+
+        face.x += (faceTargetX - face.x) * face.speed;
+        face.y += (faceTargetY - face.y) * face.speed;
+        face.el.style.left = `${face.x}px`;
+        face.el.style.top = `${face.y}px`;
+        mouth.x += (mouthTargetX - mouth.x) * mouth.speed;
+        mouth.y += (mouthTargetY - mouth.y) * mouth.speed;
+        mouth.el.style.left = `${mouth.x}px`;
+        mouth.el.style.top = `${mouth.y}px`;
+
+        requestAnimationFrame(animate);
+      }
+
+      animate();
+
+      function resetPosition() {
+        for (const obj of objects) {
+          const baseX = centerX + obj.offsetX;
+          const baseY = centerY + obj.offsetY;
+          obj.x = baseX;
+          obj.y = baseY;
+          obj.targetX = baseX;
+          obj.targetY = baseY;
+          obj.el.style.left = `${baseX}px`;
+          obj.el.style.top = `${baseY}px`;
+        }
+      }
+      resetPosition();
+
+      window.addEventListener("resize", () => {
+        centerX = window.innerWidth / 2;
+        centerY = window.innerHeight / 2;
+        resetPosition();
+      });
+    </script>
+  </body>
+</html>
