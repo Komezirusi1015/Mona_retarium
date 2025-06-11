@@ -1,0 +1,51 @@
+html,body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+body {
+  cursor: none;
+}
+img {
+  user-select: none;
+  -webkit-user-drag: none;
+}
+#container {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.follow-img {
+  position: absolute;
+  width: 500px;
+  height: auto;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+#custom-cursor {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  z-index: 9999;
+  transition: transform 0.1s ease, filter 0.1s ease;
+}
+#custom-cursor.active {
+  transform: translate(-50%, -50%) scaleY(0.8);
+  filter: invert(1) brightness(1.2);
+}
+#hot_spot {
+  position: absolute;
+  width: 120px;   /* 当たり判定の幅 */
+  height: 80px;  /* 当たり判定の高さ */
+  transform: translate(-50%, -50%);
+  cursor: grab;
+  /* 透明でクリックイベント拾う */
+  background: rgba(0, 0, 0, 0);
+  z-index: 10;
+}
+#hot_spot.dragging {
+  cursor: grabbing;
+}
